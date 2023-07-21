@@ -1,0 +1,314 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      9942,        306]
+NotebookOptionsPosition[      9588,        289]
+NotebookOutlinePosition[      9933,        304]
+CellTagsIndexPosition[      9890,        301]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Modeling motion of iron-bob pendulum over three magnets", "Subsection",
+ CellChangeTimes->{{3.742230909181795*^9, 3.742230909660478*^9}, {
+  3.7422628934204807`*^9, 3.742262904730134*^9}, {3.742273395511112*^9, 
+  3.7422734026388073`*^9}, {3.74703429500274*^9, 
+  3.74703436053997*^9}},ExpressionUUID->"2caa5865-8f45-46bb-9c57-\
+7852adf608c3"],
+
+Cell["\<\
+This notebook solves for the motion of the bob assuming that its  initially  \
+position is (x(0)=2 m and y(0)=-0.5 m) and it is initially at rest.  It also \
+plots the trajectory of the bob for the time t ranging from 0s to 25s. The \
+positions of the magnets are shown by three small coloured disks. The disk \
+for the first magnet is red, the second green and third blue.\
+\>", "Text",
+ CellChangeTimes->{{3.747034432649178*^9, 
+  3.747034535579856*^9}},ExpressionUUID->"f86ff831-9c19-4574-b3e5-\
+7979e2bf1325"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"m", "=", "1"}], ";", 
+   RowBox[{"h", "=", "0.25"}], ";", 
+   RowBox[{"k", "=", "0.2"}], ";", 
+   RowBox[{"mu", "=", "0.1"}], ";"}], " ", 
+  RowBox[{"(*", " ", "parameters", " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"x1", "=", 
+    RowBox[{"Sqrt", "[", "3", "]"}]}], ";", 
+   RowBox[{"y1", "=", "1"}], ";"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"position", " ", "first", " ", "magnet"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"x2", "=", 
+    RowBox[{"-", 
+     RowBox[{"Sqrt", "[", "3", "]"}]}]}], ";", 
+   RowBox[{"y2", "=", "1"}], ";"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"position", " ", "second", " ", "magnet"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"x3", "=", "0"}], ";", 
+   RowBox[{"y3", "=", 
+    RowBox[{"-", "2"}]}], ";"}], 
+  RowBox[{"(*", " ", 
+   RowBox[{"position", " ", "third", " ", "magnet"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"r1", "[", 
+    RowBox[{"x_", ",", "y_"}], "]"}], ":=", 
+   RowBox[{"Sqrt", "[", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"h", "^", "2"}], "+", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"x1", "-", "x"}], ")"}], "^", "2"}], "+", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"y1", "-", "y"}], ")"}], "^", "2"}]}], ")"}], "]"}]}], "  ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "distance", " ", "between", " ", "bob", " ", "and", " ", "first", " ", 
+    "magnet"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"r2", "[", 
+    RowBox[{"x_", ",", "y_"}], "]"}], ":=", 
+   RowBox[{"Sqrt", "[", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"h", "^", "2"}], "+", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"x2", "-", "x"}], ")"}], "^", "2"}], "+", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"y2", "-", "y"}], ")"}], "^", "2"}]}], ")"}], "]"}]}], 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "distance", " ", "between", " ", "bob", " ", "and", " ", "second", " ", 
+    "magnet"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"r3", "[", 
+    RowBox[{"x_", ",", "y_"}], "]"}], ":=", 
+   RowBox[{"Sqrt", "[", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"h", "^", "2"}], "+", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"x3", "-", "x"}], ")"}], "^", "2"}], "+", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"y3", "-", "y"}], ")"}], "^", "2"}]}], ")"}], "]"}]}], 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "distance", " ", "between", " ", "bob", " ", "and", " ", "third", " ", 
+    "magnet"}], " ", "*)"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"cond", "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"x", "[", "0", "]"}], "\[Equal]", "2"}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"x", "'"}], "[", "0", "]"}], "\[Equal]", "0"}], ",", 
+      RowBox[{
+       RowBox[{"y", "[", "0", "]"}], "\[Equal]", 
+       RowBox[{"-", "0.5"}]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"y", "'"}], "[", "0", "]"}], "\[Equal]", "0"}]}], "}"}]}], 
+   ";"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"initial", " ", "condition"}], " ", "*)"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"eqs", "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"m", " ", 
+        RowBox[{
+         RowBox[{"x", "''"}], "[", "t", "]"}]}], "\[Equal]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"-", "k"}], " ", 
+         RowBox[{"x", "[", "t", "]"}]}], "-", 
+        RowBox[{"mu", " ", 
+         RowBox[{
+          RowBox[{"x", "'"}], "[", "t", "]"}]}], "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"x1", "-", 
+           RowBox[{"x", "[", "t", "]"}]}], ")"}], "/", 
+         RowBox[{
+          RowBox[{"r1", "[", 
+           RowBox[{
+            RowBox[{"x", "[", "t", "]"}], ",", 
+            RowBox[{"y", "[", "t", "]"}]}], "]"}], "^", "3"}]}], "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"x2", "-", 
+           RowBox[{"x", "[", "t", "]"}]}], ")"}], "/", 
+         RowBox[{
+          RowBox[{"r2", "[", 
+           RowBox[{
+            RowBox[{"x", "[", "t", "]"}], ",", 
+            RowBox[{"y", "[", "t", "]"}]}], "]"}], "^", "3"}]}], "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"x3", "-", 
+           RowBox[{"x", "[", "t", "]"}]}], ")"}], "/", 
+         RowBox[{
+          RowBox[{"r3", "[", 
+           RowBox[{
+            RowBox[{"x", "[", "t", "]"}], ",", 
+            RowBox[{"y", "[", "t", "]"}]}], "]"}], "^", "3"}]}]}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"m", " ", 
+        RowBox[{
+         RowBox[{"y", "''"}], "[", "t", "]"}]}], "\[Equal]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"-", "k"}], " ", 
+         RowBox[{"y", "[", "t", "]"}]}], "-", 
+        RowBox[{"mu", " ", 
+         RowBox[{
+          RowBox[{"y", "'"}], "[", "t", "]"}]}], "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"y1", "-", 
+           RowBox[{"y", "[", "t", "]"}]}], ")"}], "/", 
+         RowBox[{
+          RowBox[{"r1", "[", 
+           RowBox[{
+            RowBox[{"x", "[", "t", "]"}], ",", 
+            RowBox[{"y", "[", "t", "]"}]}], "]"}], "^", "3"}]}], "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"y2", "-", 
+           RowBox[{"y", "[", "t", "]"}]}], ")"}], "/", 
+         RowBox[{
+          RowBox[{"r2", "[", 
+           RowBox[{
+            RowBox[{"x", "[", "t", "]"}], ",", 
+            RowBox[{"y", "[", "t", "]"}]}], "]"}], "^", "3"}]}], "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"y3", "-", 
+           RowBox[{"y", "[", "t", "]"}]}], ")"}], "/", 
+         RowBox[{
+          RowBox[{"r3", "[", 
+           RowBox[{
+            RowBox[{"x", "[", "t", "]"}], ",", 
+            RowBox[{"y", "[", "t", "]"}]}], "]"}], "^", "3"}]}]}]}]}], 
+     "}"}]}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{"equations", " ", "of", " ", "motion"}], " ", "*)"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"sol", "=", 
+    RowBox[{
+     RowBox[{"NDSolve", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"eqs", ",", "cond"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "y"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "0", ",", "25"}], "}"}]}], "]"}], "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}], ";"}], " "}], "\[IndentingNewLine]", 
+ RowBox[{"ParametricPlot", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"x", "[", "t", "]"}], ",", 
+      RowBox[{"y", "[", "t", "]"}]}], "}"}], "/.", "sol"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"t", ",", "0", ",", "25"}], "}"}], ",", 
+   RowBox[{"PlotRange", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "2.5"}], ",", "2.5"}], "}"}]}], ",", 
+   RowBox[{"AxesLabel", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<x (m)\>\"", ",", "\"\<y(m)\>\""}], "}"}]}], ",", 
+   RowBox[{"Epilog", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"Red", ",", 
+      RowBox[{"Disk", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"x1", ",", "y1"}], "}"}], ",", ".04"}], "]"}], ",", "Green", 
+      ",", 
+      RowBox[{"Disk", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"x2", ",", "y2"}], "}"}], ",", ".04"}], "]"}], ",", "Blue", 
+      ",", 
+      RowBox[{"Disk", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"x3", ",", "y3"}], "}"}], ",", ".04"}], "]"}]}], "}"}]}]}], 
+  "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.742728717533032*^9, 3.742729084126853*^9}, {
+  3.7427296246713657`*^9, 3.742729744585475*^9}, {3.742729841190817*^9, 
+  3.7427299291451263`*^9}, {3.742732792440813*^9, 3.742732995695711*^9}, {
+  3.742734870434101*^9, 3.742734872310823*^9}, {3.742737395598324*^9, 
+  3.742737481454207*^9}, {3.747034573317151*^9, 3.747034927151102*^9}, {
+  3.753429214047316*^9, 3.7534292152529826`*^9}},
+ ExpressionUUID -> "47cdbdf3-05a8-4682-908a-1f243b5791c8"]
+}, Open  ]]
+},
+WindowSize->{678, 735},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+FrontEndVersion->"11.0 for Microsoft Windows (64-bit) (September 21, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 349, 5, 43, "Subsection"],
+Cell[932, 29, 523, 9, 87, "Text"],
+Cell[1458, 40, 8114, 246, 506, "Input"]
+}, Open  ]]
+}
+]
+*)
+

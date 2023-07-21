@@ -1,0 +1,625 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     27250,        617]
+NotebookOptionsPosition[     26546,        587]
+NotebookOutlinePosition[     26939,        604]
+CellTagsIndexPosition[     26896,        601]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Introduction", "Section",
+ CellChangeTimes->{{3.718960459229941*^9, 
+  3.718960462276763*^9}},ExpressionUUID->"965257ce-a01e-42ed-90bd-\
+00b1d00ac9ed"],
+
+Cell["\<\
+Here, we study the energy conservation as a function of time for electrons \
+described by a superposition of eigenstates in a finite potential well. The \
+study solves the stationary Schrodinger equation and calculates the \
+eigenstates of the potential well. We then consider the time dependent \
+Schrodinger equation with the initial wave function given by a 50/50 \
+superposition of the first two eigenstates. We visualise the evolution of the \
+probability density, and the expectation value of the total energy, as a \
+function of time. \
+\>", "Text",
+ CellChangeTimes->{{3.7189605097598257`*^9, 3.718960516894988*^9}, {
+   3.71896058524244*^9, 3.718960613315382*^9}, {3.718960985932454*^9, 
+   3.7189610316394672`*^9}, {3.7189611423576927`*^9, 3.718961683228897*^9}, {
+   3.719308975431622*^9, 3.7193091429761953`*^9}, {3.7453059727282925`*^9, 
+   3.745305973047215*^9}, 3.7504942855158205`*^9, {3.7530133532187023`*^9, 
+   3.753013363977445*^9}, 3.753014429805087*^9},
+ ExpressionUUID -> "4b4ff3d3-910d-4509-9295-9de1ac310c69"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Commented code and results", "Section",
+ CellChangeTimes->{{3.718960473485078*^9, 3.718960481741499*^9}, {
+  3.718973731067968*^9, 
+  3.718973735635171*^9}},ExpressionUUID->"cfbc3bf0-f1a0-4c34-8718-\
+d5c18d1a9176"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"defining", " ", "constants", " ", "and", " ", 
+    RowBox[{"parameters", ".", " ", "Note"}], " ", "that", " ", "the", " ", 
+    "values", " ", "are", " ", "correct", " ", "as", " ", "we", " ", "used", 
+    " ", "Natural", " ", 
+    RowBox[{"Units", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Vm", "=", "25"}], ",", 
+    RowBox[{"hbar", "=", "1"}], ",", 
+    RowBox[{"m", "=", "1"}]}], "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Defining", " ", "the", " ", "quantum", " ", "well", " ", "potential", 
+     " ", "such", " ", "that", " ", "the", " ", "lowest", " ", "potential", 
+     " ", "is", " ", 
+     RowBox[{"zero", ".", " ", "The"}], " ", "energy", " ", "levels", " ", 
+     "are", " ", "defined", " ", "with", " ", "respect", " ", "to", " ", 
+     "this", " ", 
+     RowBox[{"point", "."}]}], "  ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"V", "[", "x_", "]"}], ":=", 
+    RowBox[{"Piecewise", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", 
+         RowBox[{"x", "<", "1"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"Vm", ",", 
+         RowBox[{"x", "<", 
+          RowBox[{"-", "1"}]}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"Vm", ",", 
+         RowBox[{"x", "\[GreaterEqual]", "1"}]}], "}"}]}], "}"}], "]"}]}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "NDEigensystem", " ", "is", " ", "a", " ", "command", " ", "similar", " ",
+      "to", " ", "NDSolve", " ", "however", " ", "it", " ", "solve", " ", 
+     "differential", " ", "equations", " ", "for", " ", "eigenvalues", " ", 
+     "and", " ", "eigenfunctions", " ", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+       "these", " ", "are", " ", "part", " ", "one", " ", "and", " ", "part", 
+        " ", "two", " ", "of", " ", "the", " ", "output", " ", 
+        "respectively"}], ")"}], ".", "  ", "The"}], " ", "Method", " ", 
+     "option", " ", "is", " ", "correct", " ", "and", " ", "is", " ", "used", 
+     " ", "from", " ", 
+     RowBox[{"reference", " ", "[", "1", "]"}], " ", "which", " ", "solves", 
+     " ", "a", " ", "similar", " ", 
+     RowBox[{"problem", ".", " ", "Using"}], " ", "the", " ", "default", " ", 
+     "option", " ", "does", " ", "not", " ", "deliver", " ", "precise", " ", 
+     "enough", " ", "energy", " ", 
+     RowBox[{"levels", "."}]}], " ", "*)"}], "  ", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"eig", "=", 
+     RowBox[{"NDEigensystem", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"-", 
+            RowBox[{"hbar", "^", "2"}]}], "/", 
+           RowBox[{"(", 
+            RowBox[{"2", " ", "m"}], ")"}]}], "  ", 
+          RowBox[{
+           RowBox[{"\[Psi]", "''"}], "[", "x", "]"}]}], "+", 
+         RowBox[{
+          RowBox[{"V", "[", 
+           RowBox[{"[", "x", "]"}], "]"}], " ", 
+          RowBox[{"\[Psi]", "[", "x", "]"}]}]}], "}"}], ",", "\[Psi]", ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", 
+         RowBox[{"-", "5"}], ",", "5"}], "}"}], ",", "10", ",", 
+       RowBox[{"Method", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"\"\<SpatialDiscretization\>\"", "->", 
+          RowBox[{"{", 
+           RowBox[{"\"\<FiniteElement\>\"", ",", 
+            RowBox[{"{", 
+             RowBox[{"\"\<MeshOptions\>\"", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"MaxCellMeasure", "\[Rule]", "0.05"}], "}"}]}], 
+             "}"}]}], "}"}]}], "}"}]}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "The", " ", "variable", " ", "em", " ", "is", " ", "set", " ", "to", " ", 
+     "the", " ", "number", " ", "of", " ", "energy", " ", "levels", " ", 
+     "that", " ", "are", " ", "below", " ", "the", " ", "edge", " ", "of", 
+     " ", "the", " ", 
+     RowBox[{"well", ".", " ", "These"}], " ", "levels", " ", "are", " ", 
+     RowBox[{"bound", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"bound", "=", 
+     RowBox[{"Select", "[", 
+      RowBox[{
+       RowBox[{"eig", "[", "1", "]"}], ",", 
+       RowBox[{"#", "<", "Vm"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"em", "=", 
+     RowBox[{"Length", "[", "bound", "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"Print", "[", 
+    RowBox[{"\"\<There are \>\"", "<>", 
+     RowBox[{"ToString", "[", "em", "]"}], "<>", " ", 
+     "\"\< bound energy levels.\>\""}], "]"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "This", " ", "command", " ", "plots", " ", "the", " ", "different", " ", 
+     "energy", " ", "levels", " ", "as", " ", "horizontal", " ", "grid", " ", 
+     "lines", " ", "on", " ", "the", " ", "same", " ", "graph", " ", "as", 
+     " ", "the", " ", "potential", " ", "of", " ", "the", " ", 
+     RowBox[{"well", ".", " ", "The"}], " ", "real", " ", "parts", " ", "and",
+      " ", "absolute", " ", "values", " ", "of", " ", "the", " ", "wave", " ",
+      "function", " ", "are", " ", "plotted", " ", "offset", " ", "by", " ", 
+     "the", " ", "energy", " ", 
+     RowBox[{"level", ".", " ", "The"}], " ", "ExclusionsStyle", " ", 
+     "option", " ", "is", " ", "used", " ", "to", " ", "represent", " ", 
+     "the", " ", "step", " ", "in", " ", "the", " ", "potential", " ", "of", 
+     " ", "the", " ", 
+     RowBox[{"well", ".", " ", "The"}], " ", "coefficient", " ", "in", " ", 
+     "front", " ", "of", " ", "the", " ", "wave", " ", "function", " ", "is", 
+     " ", "adjusted", " ", "manually", " ", "such", " ", "that", " ", "there",
+      " ", "is", " ", "not", " ", "overlap", " ", "between", " ", "the", " ", 
+     "different", " ", "wave", " ", "function", " ", "while", " ", "their", 
+     " ", "variations", " ", "can", " ", "be", " ", 
+     RowBox[{"observed", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"GraphicsGrid", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"Plot", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"V", "[", "x", "]"}], ",", 
+            RowBox[{"Table", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"eig", "[", 
+                RowBox[{"[", 
+                 RowBox[{"1", ",", "i"}], "]"}], "]"}], "+", 
+               RowBox[{"2", " ", 
+                RowBox[{"Re", "[", 
+                 RowBox[{
+                  RowBox[{"eig", "[", 
+                   RowBox[{"[", 
+                    RowBox[{"2", ",", "i"}], "]"}], "]"}], "[", "x", "]"}], 
+                 "]"}]}]}], ",", 
+              RowBox[{"{", 
+               RowBox[{"i", ",", "em"}], "}"}]}], "]"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"x", ",", 
+            RowBox[{"-", "5"}], ",", "5"}], "}"}], ",", 
+          RowBox[{"ExclusionsStyle", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"Red", ",", "Dashed"}], "}"}], ",", "Blue"}], "}"}]}], 
+          ",", 
+          RowBox[{"Gridlines", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"None", ",", 
+             RowBox[{"eig", "[", 
+              RowBox[{"[", 
+               RowBox[{"1", ",", 
+                RowBox[{"1", ";;", "em"}]}], "]"}], "]"}]}], "}"}]}], ",", 
+          RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+          RowBox[{"FrameLabel", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+            "\"\<Position\>\"", ",", "\"\<Energy / Wave function\>\""}], 
+            "}"}]}]}], "]"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"Plot", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"V", "[", "x", "]"}], ",", 
+            RowBox[{"Table", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"eig", "[", 
+                RowBox[{"[", 
+                 RowBox[{"1", ",", "i"}], "]"}], "]"}], "+", 
+               RowBox[{"4", 
+                RowBox[{
+                 RowBox[{"Abs", "[", 
+                  RowBox[{
+                   RowBox[{"eig", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"2", ",", "i"}], "]"}], "]"}], "[", "x", "]"}], 
+                  "]"}], "^", "2"}]}]}], ",", 
+              RowBox[{"{", 
+               RowBox[{"i", ",", "em"}], "}"}]}], "]"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"x", ",", 
+            RowBox[{"-", "5"}], ",", "5"}], "}"}], ",", 
+          RowBox[{"ExclusionsStyle", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"Red", ",", "Dashed"}], "}"}], ",", "Blue"}], "}"}]}], 
+          ",", 
+          RowBox[{"Gridlines", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"None", ",", 
+             RowBox[{"eig", "[", 
+              RowBox[{"[", 
+               RowBox[{"1", ",", 
+                RowBox[{"1", ";;", "em"}]}], "]"}], "]"}]}], "}"}]}], ",", 
+          RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+          RowBox[{"FrameLabel", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+            "\"\<Position\>\"", ",", "\"\<Energy / Probability density\>\""}],
+             "}"}]}], ",", 
+          RowBox[{"PlotPoints", "\[Rule]", "100"}]}], "]"}], "}"}]}], "}"}], 
+     ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Large"}]}], "]"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "We", " ", "define", " ", "the", " ", "wave", " ", "function", " ", "as", 
+     " ", "the", " ", "superposition", " ", "of", " ", "the", " ", "first", 
+     " ", "two", " ", "eigenstates", " ", "including", " ", "their", " ", 
+     "time", " ", "dependence", " ", "as", " ", "defined", " ", "in", " ", 
+     "case", " ", "study", " ", 
+     RowBox[{"description", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"sup", "[", 
+      RowBox[{"x_", ",", "t_"}], "]"}], ":=", " ", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Exp", "[", 
+        RowBox[{
+         RowBox[{"-", "I"}], " ", 
+         RowBox[{"eig", "[", 
+          RowBox[{"[", 
+           RowBox[{"2", ",", "1"}], "]"}], "]"}], 
+         RowBox[{"t", "/", "hbar"}]}], "]"}], 
+       RowBox[{
+        RowBox[{"eig", "[", 
+         RowBox[{"[", 
+          RowBox[{"1", ",", "1"}], "]"}], "]"}], "[", "x", "]"}]}], "+", 
+      RowBox[{
+       RowBox[{"Exp", "[", 
+        RowBox[{
+         RowBox[{"-", "I"}], " ", 
+         RowBox[{"eig", "[", 
+          RowBox[{"[", 
+           RowBox[{"2", ",", "2"}], "]"}], "]"}], 
+         RowBox[{"t", "/", "hbar"}]}], "]"}], 
+       RowBox[{
+        RowBox[{"eig", "[", 
+         RowBox[{"[", 
+          RowBox[{"1", ",", "2"}], "]"}], "]"}], "[", "x", "]"}]}]}]}], ";"}],
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Using", " ", "Manipulate", " ", "we", " ", "animate", " ", "the", " ", 
+     "absolute", " ", "value", " ", "of", " ", "the", " ", "superposition", 
+     " ", "as", " ", "a", " ", "function", " ", "of", " ", 
+     RowBox[{"time", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"Manipulate", "[", 
+    RowBox[{
+     RowBox[{"Plot", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"sup", "[", 
+         RowBox[{"x", ",", "t"}], "]"}], "^", "2"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", 
+         RowBox[{"-", "5"}], ",", "5"}], "}"}], ",", 
+       RowBox[{"PlotRange", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "3"}], "}"}]}], ",", 
+       RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+       RowBox[{"FrameLabel", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"\"\<Position\>\"", ",", "\"\<Probability density\>\""}], 
+         "}"}]}]}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"t", ",", "0", ",", "10"}], "}"}]}], "]"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{
+     "At", " ", "each", " ", "moment", " ", "the", " ", "expectation", " ", 
+      "value", " ", "of", " ", "the", " ", "total", " ", "energy", " ", "is", 
+      " ", "defined", " ", "by", " ", "the", " ", "Hamiltonian", " ", 
+      "operator", " ", 
+      RowBox[{"(", 
+       RowBox[{"I", " ", "hbar", " ", 
+        SubscriptBox["\[PartialD]", "t"]}], ")"}], " ", "applied", " ", "to", 
+      " ", "the", " ", "wave", " ", "function"}], ",", " ", 
+     RowBox[{
+     "multiplied", " ", "by", " ", "the", " ", "complex", " ", "conjugate", 
+      " ", "of", " ", "the", " ", "wave", " ", "function"}], ",", " ", 
+     RowBox[{
+      RowBox[{
+      "and", " ", "integrated", " ", "over", " ", "the", " ", "whole", " ", 
+       "solved"}], "-", 
+      RowBox[{"for", " ", 
+       RowBox[{"space", ".", " ", "Due"}], " ", "to", " ", "numerical", " ", 
+       "errors", " ", "this", " ", "integral", " ", "has", " ", "a", " ", 
+       "small", " ", "imaginary", " ", "part", " ", "that", " ", "we", " ", 
+       "eliminate", " ", "by", " ", "taking", " ", "the", " ", "real", " ", 
+       "part", " ", 
+       RowBox[{"only", "."}]}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"nrg", "[", "t_", "]"}], ":=", 
+    RowBox[{
+     RowBox[{"NIntegrate", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Conjugate", "[", 
+         RowBox[{"sup", "[", 
+          RowBox[{"x", ",", "t"}], "]"}], "]"}], 
+        RowBox[{"(", 
+         RowBox[{"I", " ", "hbar"}], ")"}], 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Derivative", "[", 
+           RowBox[{"0", ",", "1"}], "]"}], "[", "sup", "]"}], "[", 
+         RowBox[{"x", ",", "t"}], "]"}]}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", 
+         RowBox[{"-", "5"}], ",", "5"}], "}"}]}], "]"}], "/", "Re"}]}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Plot", " ", "of", " ", "the", " ", "expectation", " ", "value", " ", 
+     "of", " ", "the", " ", "total", " ", "energy", " ", "as", " ", "a", " ", 
+     "function", " ", "of", " ", "time", " ", "for", " ", "t", " ", "up", " ",
+      "to", " ", "10."}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"Plot", "[", 
+    RowBox[{
+     RowBox[{"nrg", "[", "t", "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"t", ",", "10"}], "}"}], ",", 
+     RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+     RowBox[{"FrameLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+       "\"\<Time\>\"", ",", "\"\<Expectation value of the total energy\>\""}],
+        "}"}]}]}], "]"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "The", " ", "energy", " ", "is", " ", "conserved", " ", "because", " ", 
+     "the", " ", "eigenstates", " ", "are", " ", "orthogonal", " ", "to", " ",
+      "each", " ", "other", " ", "which", " ", "can", " ", "be", " ", "seen", 
+     " ", "by", " ", "calculating", " ", "the", " ", "dot", " ", "product", 
+     " ", "between", " ", "each", " ", "two", " ", "states", " ", "taken", 
+     " ", "from", " ", "the", " ", "bound", " ", 
+     RowBox[{"levels", ".", " ", "We"}], " ", "can", " ", "calculate", " ", 
+     "all", " ", "these", " ", "dot", " ", "products", " ", "using", " ", 
+     "the", " ", "Table", " ", 
+     RowBox[{"command", ".", " ", "Sometimes"}], " ", "yu", " ", "might", " ",
+      "get", " ", "warning", " ", "messages", " ", "when", " ", "doing", " ", 
+     "this", " ", "when", " ", "the", " ", "integrals", " ", "are", " ", 
+     RowBox[{"zero", ".", " ", "Look"}], " ", "at", " ", "the", " ", 
+     "AccuracyGoal", " ", "option", " ", "in", " ", "NIntegrate", " ", "to", 
+     " ", "overcome", " ", "these", " ", 
+     RowBox[{"warnings", "."}]}], "*)"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"mat", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"NIntegrate", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Conjugate", "[", 
+           RowBox[{
+            RowBox[{"eig", "[", 
+             RowBox[{"[", 
+              RowBox[{"2", ",", "i"}], "]"}], "]"}], "[", "x", "]"}], "]"}], 
+          RowBox[{
+           RowBox[{"eig", "[", 
+            RowBox[{"[", 
+             RowBox[{"2", ",", "i"}], "]"}], "]"}], "[", "x", "]"}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"x", ",", 
+           RowBox[{"-", "5"}], ",", "5"}], "}"}]}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "em"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"j", ",", "em"}], "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{
+     "We", " ", "use", " ", "ArrayPlot", " ", "to", " ", "represent", " ", 
+      "the", " ", 
+      RowBox[{"results", ".", " ", "Alternatively"}]}], ",", " ", 
+     RowBox[{"MatrixPlot", " ", "can", " ", "be", " ", 
+      RowBox[{"used", "."}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"ArrayPlot", "[", 
+    RowBox[{"mat", ",", 
+     RowBox[{"FrameLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\"\<<2|\>\"", ",", "\"\<|1>\>\""}], "}"}]}], ",", 
+     RowBox[{"PlotLabel", "\[Rule]", "\"\<<2|1>\>\""}]}], "]"}], 
+   "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.6793824475435143`*^9, 3.6793826962660637`*^9}, {
+   3.6793828690402184`*^9, 3.679382927464431*^9}, {3.679382997133017*^9, 
+   3.679383292958006*^9}, {3.6793833913213787`*^9, 3.679384000258451*^9}, {
+   3.679384062212628*^9, 3.679384312130966*^9}, {3.6793844428772707`*^9, 
+   3.679384476522398*^9}, {3.679384541165599*^9, 3.679384549859548*^9}, {
+   3.6793846620101748`*^9, 3.6793847501626368`*^9}, {3.679384856721073*^9, 
+   3.679384907792706*^9}, {3.679384976077909*^9, 3.679385481399281*^9}, {
+   3.679385582699884*^9, 3.6793856300738077`*^9}, {3.679386905918056*^9, 
+   3.679387241062796*^9}, {3.687844061638361*^9, 3.6878441574502907`*^9}, {
+   3.687844329709591*^9, 3.6878443902337503`*^9}, {3.687844468054912*^9, 
+   3.6878444985502996`*^9}, {3.68784456032297*^9, 3.687844585754402*^9}, {
+   3.687844652223261*^9, 3.6878446774691353`*^9}, {3.6878447577968273`*^9, 
+   3.6878448919886703`*^9}, {3.6878449524561043`*^9, 
+   3.6878452681800747`*^9}, {3.6878453477669888`*^9, 3.687845416114943*^9}, {
+   3.687845509278406*^9, 3.687845511347619*^9}, {3.6878477040591803`*^9, 
+   3.687847870018812*^9}, 3.687848050473782*^9, {3.687848410756637*^9, 
+   3.687848635853691*^9}, {3.6878489826012573`*^9, 3.6878490147647667`*^9}, 
+   3.687849113939784*^9, {3.687849283176631*^9, 3.687849332439773*^9}, 
+   3.6878493960048637`*^9, {3.687849489862071*^9, 3.687849513335616*^9}, {
+   3.6878495913235683`*^9, 3.687849643836553*^9}, {3.687849787861307*^9, 
+   3.6878498158597507`*^9}, {3.687849877367403*^9, 3.687849878255608*^9}, {
+   3.687850231940117*^9, 3.687850250805106*^9}, 3.687850432615705*^9, {
+   3.68785054132032*^9, 3.687850541559371*^9}, {3.687850688187591*^9, 
+   3.687850716011199*^9}, {3.687850782761623*^9, 3.687850786221863*^9}, {
+   3.687850888037545*^9, 3.6878509778582563`*^9}, {3.687851046842411*^9, 
+   3.6878510510029097`*^9}, {3.687851128981072*^9, 3.687851231524014*^9}, {
+   3.687851379385379*^9, 3.687851416512268*^9}, {3.68785184718533*^9, 
+   3.687851847302837*^9}, {3.687852080056929*^9, 3.6878520808568993`*^9}, {
+   3.68785238094451*^9, 3.6878523903490543`*^9}, {3.687852615944058*^9, 
+   3.68785278026686*^9}, {3.687852916843165*^9, 3.687852946393381*^9}, {
+   3.687853021286159*^9, 3.687853131823615*^9}, {3.6878551203035927`*^9, 
+   3.687855180109333*^9}, 3.687855529291295*^9, {3.687855826237853*^9, 
+   3.687856178465548*^9}, 3.6878685658998327`*^9, {3.688052910533985*^9, 
+   3.688052973228743*^9}, {3.688053068906602*^9, 3.6880530709131727`*^9}, {
+   3.7189616918258667`*^9, 3.7189618213817253`*^9}, {3.718966377436252*^9, 
+   3.718966770108231*^9}, {3.718966918388513*^9, 3.718967293578766*^9}, {
+   3.718967400817122*^9, 3.7189678367392883`*^9}, 3.718968215491701*^9, {
+   3.718968526906105*^9, 3.718968772571023*^9}, {3.718969473430334*^9, 
+   3.718969495811557*^9}, {3.7189696750513697`*^9, 3.718969824258953*^9}, {
+   3.718969889326702*^9, 3.7189700984934683`*^9}, {3.718970260430957*^9, 
+   3.718970573826994*^9}, {3.718970948212532*^9, 3.7189711523254347`*^9}, 
+   3.718972323041108*^9, {3.718972404315012*^9, 3.718972529251809*^9}, {
+   3.718972674165303*^9, 3.7189726960228367`*^9}, {3.71899168115654*^9, 
+   3.718991699401264*^9}, {3.7193047753494253`*^9, 3.7193048005144444`*^9}, {
+   3.719304888559671*^9, 3.7193049180658627`*^9}, {3.719309221565357*^9, 
+   3.7193092511572723`*^9}, {3.719309393043316*^9, 3.719309503896914*^9}, {
+   3.7193096116955748`*^9, 3.71930971002076*^9}, {3.719309777102585*^9, 
+   3.719309797876275*^9}, {3.7193099433443127`*^9, 3.719310634725977*^9}, {
+   3.736591979108666*^9, 3.736591984213896*^9}, {3.7504942946075788`*^9, 
+   3.7504943190857377`*^9}, {3.7530134772139616`*^9, 3.753013479059942*^9}, {
+   3.7530136153526654`*^9, 3.75301361540806*^9}, {3.753014367272004*^9, 
+   3.7530143929910975`*^9}, {3.782042353340378*^9, 3.782042355426441*^9}, {
+   3.7820455650335236`*^9, 3.782045623392679*^9}, {3.782045686442953*^9, 
+   3.782045737683483*^9}, {3.7820457734744997`*^9, 3.782045773537459*^9}},
+ ExpressionUUID -> "0462ea48-dd40-480d-b9c1-b7a35e85b6c6"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Discussion", "Section",
+ CellChangeTimes->{{3.7189604865818977`*^9, 3.718960492029983*^9}, {
+  3.7189737450194473`*^9, 3.7189737453877087`*^9}},
+ ExpressionUUID -> "128a416a-e865-4302-b549-1139f712a871"],
+
+Cell["\<\
+I have calculated the first 10 energy levels and determined the number of \
+bound level i.e. those with energy smaller than the \
+\[OpenCurlyDoubleQuote]wall height\[CloseCurlyDoubleQuote]. These bound \
+levels are plotted, showing the energy level, real part (Figure 1) of the \
+wave function and the probability density (Figure 2). I then defined a time \
+dependent wave function composed of the superposition of the first two levels \
+which can be seen in the animation (Figure 3). Each of these levels has a \
+different time dependent oscillation and I use the Hamiltonian operator to \
+determine the expectation value of the total energy of the superposition. The \
+result shows that the expectation value of the total energy is conserved \
+(Figure 4) up to numerical precision. I then explain this result by looking \
+at the dot product between each of the first five levels (Figure 5). This dot \
+product is zero for any two levels that correspond to different energy \
+levels. This means that these states are orthogonal to each other. When \
+calculating the expectation value of the total energy, we calculate the dot \
+product between the superposition wave function and itself. In this dot \
+product, all the mixed terms are zero because of orthogonality and we only \
+remain with a sum of dot product of each eigenstate with itself. However, the \
+amplitude squared of each individual state is constant. We therefore have \
+conservation of the expectation value of the total energy. \
+\>", "Text",
+ CellChangeTimes->{{3.718972334118248*^9, 3.7189723813477287`*^9}, {
+   3.718972543771329*^9, 3.7189725587071*^9}, {3.7189727278759193`*^9, 
+   3.7189728009114113`*^9}, {3.71897290301239*^9, 3.718972934047904*^9}, {
+   3.718972994184416*^9, 3.718973402653116*^9}, {3.718973466110695*^9, 
+   3.7189737020120153`*^9}, {3.7504943283957424`*^9, 
+   3.7504943524027925`*^9}, {3.7530136499673214`*^9, 3.753013664893367*^9}, {
+   3.753013707459693*^9, 3.753013754156583*^9}, 3.7530144004399443`*^9, {
+   3.753014525654604*^9, 3.7530145404197826`*^9}, {3.753623225816231*^9, 
+   3.753623485028549*^9}, {3.7536235545178623`*^9, 3.7536235840471354`*^9}},
+ ExpressionUUID -> "69d3140a-25c9-4d4e-93d4-2a1bc1794ccf"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["References", "Section",
+ CellChangeTimes->{{3.718960495550083*^9, 
+  3.718960496870213*^9}},ExpressionUUID->"1afbef14-6a5a-4080-816d-\
+6c23e2f555a1"],
+
+Cell["\<\
+[1] \[OpenCurlyDoubleQuote]Find the Spectrum of a Schr\[ODoubleDot]dinger \
+Operator\[CloseCurlyDoubleQuote], \
+http://www.wolfram.com/language/11/differential-eigensystems/find-the-\
+spectrum-of-a-schrdinger-operator.en.html, (accessed 6/11/2017). 
+\
+\>", "Text",
+ CellChangeTimes->{{3.718966295042392*^9, 
+  3.718966335982161*^9}},ExpressionUUID->"087dbfeb-7353-427b-a498-\
+153c366326cb"]
+}, Open  ]]
+},
+WindowSize->{700, 709},
+WindowMargins->{{36, Automatic}, {Automatic, 65}},
+Visible->True,
+Magnification:>1.25 Inherited,
+FrontEndVersion->"11.0 for Microsoft Windows (64-bit) (September 21, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 157, 3, 78, "Section"],
+Cell[740, 27, 1044, 16, 212, "Text"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1821, 48, 220, 4, 78, "Section"],
+Cell[2044, 54, 21419, 470, 2510, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[23500, 529, 209, 3, 78, "Section"],
+Cell[23712, 534, 2223, 31, 533, "Text"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[25972, 570, 155, 3, 78, "Section"],
+Cell[26130, 575, 400, 9, 113, "Text"]
+}, Open  ]]
+}
+]
+*)
+
